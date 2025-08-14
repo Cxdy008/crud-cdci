@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Tasks extends Model
+{
+    protected $fillable = ['type','description', 'user_id'];
+
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
+}

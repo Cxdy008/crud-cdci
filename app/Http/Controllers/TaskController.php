@@ -2,27 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tasks;
 use App\Models\User;
-use Illuminate\Console\View\Components\Task;
 use Illuminate\Http\Request;
+//use Illuminate\Console\View\Components\Task;
 
 class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $tasks = $request->user() ? $request->user()->tasks : collect();
+        $tasks = Tasks::with('user')->get();
         return view('tasks.index', compact('tasks'));
     }
 
-    public function show(User $user, Task $task)
+    public function show(Tasks $task)
     {
-        $tasks = $user->tasks;
-        return view('tasks.show', compact('task', 'tasks'));
+        $tasks = Tasks::with('user')->get();
+        return view('tasks.show', compact('task'));
     }
 
-    public function create(Request $request, User $user)
+    public function create()
     {
-        return view('tasks.create', compact('user'));
+        $users = User::all();
+        return view('tasks.create', compact('users'));
     }
 
     public function store(Request $request, User $user)
@@ -38,5 +40,41 @@ class TaskController extends Controller
         ]);
 
         return redirect()->route('tasks.index')->with('success', 'Task created successfully');
+    }
+
+    public function edit(Tasks $task)
+    {
+        $users = User::all();
+        return view('tasks.edit', compact('task', 'users'));
+    }
+
+    public function update(Request $request, User $user, Tasks $task)
+    {
+        $request->validate([
+            'type'=>'required',
+            'description'=>'required',
+            'user_id' => 'required'
+        ]);
+
+        $task->update([
+            'type' => $request->type,
+            'description' => $request->description,
+            'user_id' => $request->input('user_id')
+        ]);
+
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully');
+    }
+
+    public function destroy(Tasks $task)
+    {
+        $task->delete();
+        return redirect()->route('tasks.index')->with('success', 'Task deleted successfully');
+    }
+
+    public function purge($id)
+    {
+        $task = Tasks::withTrashed()->findOrFail($id);
+        $task->forceDelete();
+        return redirect()->route('tasks.index')->with('success', 'Task permanently deleted successfully');
     }
 }

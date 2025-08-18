@@ -22,7 +22,7 @@
                     </div>
 
                     <div classe="mt-2 ">
-                        <label for="">Name:</label>
+                        <label for="">Email:</label>
                         <input type="text" name="email" placeholder="Email" class="form-control" value="{{$user->email}}">
                         @error("name")
                         <span class="text-danger">{{ $message }}</span>
@@ -30,8 +30,8 @@
                     </div>
 
                     <div classe="mt-2 ">
-                        <label for="">Name:</label>
-                        <input type="text" name="password" placeholder="Password" class="form-control" value="{{$user->password}}">
+                        <label for="">Password:</label>
+                        <input type="text" name="password" placeholder="Password" class="form-control" >
                         @error("name")
                         <span class="text-danger">{{ $message }}</span>
                         @enderror

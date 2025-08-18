@@ -19,3 +19,5 @@ Route::post('/users/{user}/tasks', [TaskController::class, 'store'])->name('task
 Route::delete('/tasks/{id}/purge', [TaskController::class, 'purge'])->name('tasks.purge');
 
 Route::put('/users/{user}/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+
+Route::get('/report', [TaskController::class, 'report'])->name('tasks.report');

@@ -22,7 +22,7 @@
 
                     <div classe="mt-2">
                         <label for="">Email:</label>
-                        <input type="text" name="email" placeholder="Email" class="form-control">
+                        <input type="email" name="email" placeholder="Email" class="form-control">
                         @error("detail")
                         <span class="text-danger">{{ $message }}</span>
                         @enderror

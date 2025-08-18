@@ -12,6 +12,8 @@
                 @endsession()
 
                 <a href="{{ route('tasks.create') }}" class="btn btn-success btn-sm mb-3">Create Task</a>
+                <a href="{{ route('tasks.report') }}" class="btn btn-primary btn-sm mb-3">Generate Report</a>
+
                 @if ($tasks->isEmpty())
                     <p>Nenhuma tarefa encontrada</p>
                 @else

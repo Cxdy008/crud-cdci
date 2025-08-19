@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Barryvdh\DomPDF\Facade\Pdf;
+use Mpdf\Mpdf;
+//use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Tasks;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -80,11 +81,15 @@ class TaskController extends Controller
     }
 
     public function report(Request $request){
-        //$tasks = Tasks::with('user')->get();
         $tasksByUser = Tasks::with('user')->get()->groupBy('user_id');
 
-        $pdf = Pdf::loadView('tasks.report', ['tasksByUser' => $tasksByUser]);
+        $html = view('tasks.report', compact('tasksByUser'))->render();
 
-        return $pdf->stream('report.pdf');
+        $mpdf = new Mpdf();
+        $mpdf->WriteHTML($html);
+        //$pdf = PDF::loadView('tasks.report', ['tasksByUser' => $tasksByUser]);
+
+        return response($mpdf->Output('', 'I'))
+            ->header('Content-Type', 'application/pdf');
     }
 }

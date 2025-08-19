@@ -5,46 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Report</title>
     <style>
-        body { font-family: DejaVu Sans, sans-serif; }
-        .user-section { margin-bottom: 20px; }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            font-family: Arial, sans-serif;
         }
+
         th, td {
-            border: 1px solid #000;
+            border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
+            font-weight: bold;
         }
+
+        /* Destacar mudança de usuário */
+        tr:first-child td,
+        tr:not(:first-child) td:first-child {
+            border-top: 2px solid #007bff;
+        }
+
+        /* Ou use zebra striping por usuário */
+        .user-group-1 { background-color: #f8f9fa; }
+        .user-group-2 { background-color: #e9ecef; }
     </style>
 </head>
 <body>
     <h1>Relatório de Tarefas</h1>
     <hr>
-    @foreach ($tasksByUser as $userId => $tasks)
-        @php
-            $user = \App\Models\User::find($userId);
-        @endphp
-        <div class="user-section">
-            <h2>User: {{ $user->name ?? 'Unknown User' }}</h2>
-            <table>
+    <table>
+        <thead>
+        <tr>
+            <th>User</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach ($tasksByUser as $userId => $tasks)
+            @php
+                $user = \App\Models\User::find($userId);
+            @endphp
+
+            {{-- Tarefas do usuário --}}
+            @foreach ($tasks as $task)
                 <tr>
-                    <th>Type</th>
-                    <th>Description</th>
+                    <td>{{ $user->name ?? 'Unknown User' }}</td>
+                    <td>{{ $task->type ?? 'N/A' }}</td>
+                    <td>{{ $task->description ?? 'N/A' }}</td>
                 </tr>
-                @foreach ($tasks as $task)
-                    <tr>
-                        <td>{{ $task->type ?? 'N/A' }}</td>
-                        <td>{{ $task->description ?? 'N/A' }}</td>
-                    </tr>
-                @endforeach
-            </table>
-        </div>
-        <div style="page-break-before: always;"></div> <!-- Nova página para cada usuário -->
-    @endforeach
+            @endforeach
+        @endforeach
+        </tbody>
+    </table>
 </body>
 </html>

@@ -82,6 +82,7 @@ class TaskController extends Controller
 
     // Just to try if SSH
     // leme see now
+    // another try
     public function report(Request $request){
         $tasksByUser = Tasks::with('user')->get()->groupBy('user_id');
 

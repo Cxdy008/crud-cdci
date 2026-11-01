@@ -1,61 +1,163 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## Sobre o Projecto
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O **CRUD CDCI** é uma aplicação web desenvolvida com o framework [Laravel 12](https://laravel.com) (PHP 8.2+), cujo objetivo é servir como um sistema de gestão simples e funcional de tarefas e utilizadores. O projecto demonstra a aplicação prática de conceitos de desenvolvimento web moderno, tais como roteamento RESTful, camada MVC, manipulação de erros de validação, *soft deletes*, geração de relatórios em PDF e utilização de *frontend* assíncrona com AJAX.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+A aplicação permite registar utilizadores e associar-lhes tarefas, visualizando, editando e apagando (com *soft delete* e *purge*) tanto os utilizadores como as tarefas, além de gerar relatórios em PDF estatísticos/agrupados por utilizador.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Funcionalidades
 
-## Learning Laravel
+### Utilizadores
+- Listar todos os utilizadores existentes na base de dados.
+- Criar novos utilizadores (nome, email e password).
+- Visualizar os detalhes de um utilizador.
+- Editar os dados de um utilizador.
+- Eliminar um utilizador (soft delete, preservando registos na base de dados).
+- **Purgar** (force delete) utilizadores eliminados, removendo definitivamente os registos.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Tarefas
+- Listar todas as tarefas, com o respetivo utilizador associado (via relação `belongsTo`).
+- Criar tarefas (type e description) e associá-las a um utilizador existente.
+- Visualizar os detalhes de uma tarefa.
+- Editar o type, description e utilizador associado de uma tarefa.
+- Eliminar uma tarefa (soft delete).
+- **Purgar** (force delete) tarefas eliminadas.
+- Gerar um relatório em PDF com as tarefas agrupadas por utilizador.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Relatórios
+- Geração automática de um documento PDF (`tasks.report`) que mostra, para cada utilizador, o type e a description das suas tarefas.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Tecnologias Utilizadas
 
-## Laravel Sponsors
+| Categoria | Tecnologia |
+|---|---|
+| Backend | Laravel 12, PHP 8.2+ |
+| Frontend | Tailwind CSS 4, Vite, Axios, jQuery |
+| Banco de Dados | MySQL / MariaDB (com suporte a SQLite para desenvolvimento) |
+| Geração de PDF | mPDF (`mpdf/mpdf`, `carlos-meneses/laravel-mpdf`, `barryvdh/laravel-dompdf`) |
+| Sessões | Database session driver |
+| Filas | Database queue driver |
+| Cache | Database cache driver |
+| Testes | PHPUnit, Laravel test helpers |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Instalação e Configuração
 
-### Premium Partners
+1. **Clonar o repositório**
+   ```bash
+   git clone https://github.com/Cxdy008/crud-cdci.git
+   cd crud-cdci
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+2. **Instalar as dependências do PHP**
+   ```bash
+   composer install
+   ```
 
-## Contributing
+3. **Copiar o ficheiro de ambiente**
+   ```bash
+   cp .env.example .env
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. **Gerar a chave da aplicação**
+   ```bash
+   php artisan key:generate
+   ```
 
-## Code of Conduct
+5. **Configurar o ficheiro `.env`**
+   - Definir `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD` segundo o seu ambiente de base de dados.
+   - O projecto está configurado para usar a base de dados `crud_cdci` (MySQL) por defeito.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+6. **Executar as migrações e popular a base de dados**
+   ```bash
+   php artisan migrate
+   ```
+   Se dispõe de um ambiente Sail:
+   ```bash
+   php artisan sail:install
+   ./vendor/bin/sail up -d
+   ```
 
-## Security Vulnerabilities
+7. **Instalar as dependências do frontend**
+   ```bash
+   npm install
+   npm run dev
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Execução
 
-## License
+Para iniciar o servidor web embutido:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan serve
+```
+
+A aplicação fica disponível em `http://localhost:8000`.
+
+## Estrutura do Projecto
+```
+crud-cdci/
+├── app/
+│   ├── Http/Controllers/   # Controladores: UserController, TaskController
+│   ├── Models/             # Models: User, Tasks
+│   └── Providers/          # Provedores de aplicação
+├── database/
+│   ├── migrations/         # Migrações: utilizadores, tarefas, cache, jobs
+│   └── seeders/            # Seeders de demonstração
+├── public/                 # Document root
+├── resources/views/        # Views Blade: tarefas, utilizadores, layout
+├── routes/
+│   └── web.php             # Definição das rotas RESTful
+├── storage/                # Arquivos temporários e logs
+├── tests/                  # Testes PHPUnit
+├── composer.json           # Dependências e scripts do PHP
+├── package.json            # Dependências e scripts do frontend
+├── vite.config.js          # Configuração do Vite
+└── README.md               # Este ficheiro
+```
+
+## Rotas Principais
+
+| Método | Rota | Controlador | Ação |
+|---|---|---|---|
+| GET | `/users` | `UserController@index` | Listar utilizadores |
+| GET | `/users/create` | `UserController@create` | Formulário de criação |
+| POST | `/users` | `UserController@store` | Guardar utilizador |
+| GET | `/users/{user}` | `UserController@show` | Ver utilizador |
+| GET | `/users/{user}/edit` | `UserController@edit` | Formulário de edição |
+| PUT/PATCH | `/users/{user}` | `UserController@update` | Actualizar utilizador |
+| DELETE | `/users/{user}` | `UserController@destroy` | Soft delete |
+| DELETE | `/users/{user}/purge` | `UserController@purge` | Force delete |
+| GET | `/tasks` | `TaskController@index` | Listar tarefas |
+| GET | `/tasks/create` | `TaskController@create` | Formulário de criação |
+| POST | `/users/{user}/tasks` | `TaskController@store` | Guardar tarefa |
+| GET | `/tasks/{task}` | `TaskController@show` | Ver tarefa |
+| GET | `/tasks/{task}/edit` | `TaskController@edit` | Formulário de edição |
+| PUT/PATCH | `/users/{user}/tasks/{task}` | `TaskController@update` | Actualizar tarefa |
+| DELETE | `/tasks/{task}` | `TaskController@destroy` | Soft delete |
+| DELETE | `/tasks/{id}/purge` | `TaskController@purge` | Force delete |
+| GET | `/report` | `TaskController@report` | Relatório em PDF |
+
+## Contribuição
+
+Obrigado pelo interesse em contribuir para o projecto! Sinta-se à vontade para:
+
+1. **Reportar bugs** através das *issues*.
+2. **Sugerir novas funcionalidades** através das *issues*.
+3. **Enviar *pull requests*** com melhorias e correções.
+
+Antes de enviar uma *pull request*, verifique se o código segue o estilo do projecto e, se possível, execute os testes unitários.
+
+## Segurança
+
+Se encontrar alguma *vulnerabilidade de segurança* no projecto, por favor não abra uma *issue*. Contacte diretamente o autor do projecto via e-mail ou através das suas *responsabilidades* de segurança públicas, agradecendo a compreensão.
+
+## Licença
+
+O projecto está licenciado sob a [MIT License](https://opensource.org/licenses/MIT).
